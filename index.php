@@ -6,16 +6,22 @@
 
     switch($fileJSON){
         case 'GET':
-            var_dump($fileJSON);
+            echo "GET";
             header("HTTP/1.1 200 OK");
             break;
         case 'POST':
+            echo "POST";
+            header("HTTP/1.1 200 OK");
             break;
     
         case 'PUT':
+            echo "PUT";
+            header("HTTP/1.1 200 OK");
             break;
     
         case 'DELETE':
+            echo "DELETE";
+            header("HTTP/1.1 200 OK");
             break;
         default:
             header("HTTP/1.1 400 BAD REQUEST");
