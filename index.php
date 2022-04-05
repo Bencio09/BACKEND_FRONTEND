@@ -1,4 +1,5 @@
 <?php
+    include("./connesssione.php");
     $method = $_SERVER["REQUEST_METHOD"];
     $request = explode("/", substr(@$_SERVER['PATH_INFO'], 1));
     $fileJSON = file_get_contents("data.json");
