@@ -1,32 +1,41 @@
 <?php
-    include("./connesssione.php");
-    $method = $_SERVER["REQUEST_METHOD"];
-    $request = explode("/", substr(@$_SERVER['PATH_INFO'], 1));
-    $fileJSON = file_get_contents("data.json");
-    //echo $fileJSON;
-    $data = json_decode($fileJSON, true);
+    session_start();
     
-    header("Content-Type: application/json");
+    if(!isset($_SESSION["person"])){
+        $_SESSION["person"] = '{"firstName":"Johnny","lastName":"Smitty","gender":"M"}';
+    }
+
+    $person = json_decode($_SESSION["person"], true);
+    $method = $_SERVER["REQUEST_METHOD"];
+    $fileJSON = file_get_contents("php://input");
+    $data = json_decode($fileJSON, TRUE);
+
     switch($method){
         case 'GET':
-            echo "GET";
-            echo $data[19];
-            //echo var_dump($fileJSON);
+            
+            echo json_encode($person);
+            $query = "SELECT * FROM employees limit $a, $b;";
+
             break;
+
         case 'POST':
-            echo "POST";
-            for ($i=0; $i < 20; $i++) { 
-                echo $data["_embedded"]["employees"][$i];
-            }
+            $_SESSION["person"] = $data;
+            echo "Nuovo nome: " . $_SESSION["person"]["firstName"];
+            echo "\nAggiunto con successo";
             break;
     
         case 'PUT':
-            echo "PUT";
+            $_SESSION["person"] = $data;
+            echo "Nuovo nome: " . $_SESSION["person"]["firstName"];
+            echo "\nAggiunto con successo";
             break;
     
         case 'DELETE':
-            echo "DELETE";
+            $_SESSION["person"] = null;
+            var_dump($data);
+            echo "\nEliminato con successo";
             break;
+
         default:
             header("HTTP/1.1 400 BAD REQUEST");
             break;
