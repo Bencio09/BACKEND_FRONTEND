@@ -1,5 +1,9 @@
 <?php
     session_start();
+    include "./connessione.php";
+    $b = 20;
+    $a = $_GET["page"] * $b;
+    
     
     if(!isset($_SESSION["person"])){
         $_SESSION["person"] = '{"firstName":"Johnny","lastName":"Smitty","gender":"M"}';
@@ -12,27 +16,48 @@
 
     switch($method){
         case 'GET':
+            //curl localhost:8080
+            if(isset($_GET['id'])){
+                $query = "SELECT * FROM employees WHERE id = $_GET[id];";
+                $result = mysqli_query($connessione, $query) or die("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo $row["first_name"]. " " . $row["last_name"] . "<br>";
+                } 
+            }else{
+                $query = "SELECT * FROM employees LIMIT $a, $b";
+                $result = mysqli_query($connessione, $query) or die("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo $row["first_name"]. " " . $row["last_name"] . "<br>";
+                }
+            }
             
-            echo json_encode($person);
-            $query = "SELECT * FROM employees limit $a, $b;";
 
             break;
 
         case 'POST':
-            $_SESSION["person"] = $data;
-            echo "Nuovo nome: " . $_SESSION["person"]["firstName"];
-            echo "\nAggiunto con successo";
+            //curl -X POST -H "Content-Type: application/json" -d "{\"firstName\":\"John\",\"lastName\":\"Smith\",\"gender\":\"M\"}" localhost:8080
+            $data = json_decode(file_get_contents('php://input'), true);
+            $query = "INSERT INTO employees (birth_date, first_name, last_name, gender, hire_date) VALUES ('', $data[firstName]', '$data[lastName]', '$data[gender]', '');";
+            $result = mysqli_query ($connessione, $query) or die ("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
             break;
-    
+            echo "Aggiunto con successo";
         case 'PUT':
-            $_SESSION["person"] = $data;
-            echo "Nuovo nome: " . $_SESSION["person"]["firstName"];
-            echo "\nAggiunto con successo";
+            //PUT: curl -X PUT -H "Content-Type: application/json" -d "{\"id\":\"10003\",\"firstName\":\"John\",\"lastName\":\"Smith\",\"gender\":\"M\"}" localhost:8080
+            $data = json_decode(file_get_contents('php://input'), true);
+            $query =    "UPDATE employees 
+                        SET first_name = '$data[firstName]', 
+                            last_name = '$data[lastName]', 
+                            gender = '$data[gender]'
+                        WHERE id = '$data[id]'";
+            $result = mysqli_query ($connessione, $query) or die ("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
+            echo "\n Modificato con successo";
             break;
     
         case 'DELETE':
-            $_SESSION["person"] = null;
-            var_dump($data);
+            //curl -X DELETE -H "Content-Type: application/json" -d "{\"id\":\"10003\"}" localhost:8080
+            $data = json_decode(file_get_contents('php://input'), true);
+            $query = "DELETE FROM employees WHERE id = '$data[id]'";
+            $result = mysqli_query ($connessione, $query) or die ("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
             echo "\nEliminato con successo";
             break;
 
@@ -40,4 +65,3 @@
             header("HTTP/1.1 400 BAD REQUEST");
             break;
     }
-?>
