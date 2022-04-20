@@ -37,7 +37,8 @@
         case 'POST':
             //curl -X POST -H "Content-Type: application/json" -d "{\"firstName\":\"John\",\"lastName\":\"Smith\",\"gender\":\"M\"}" localhost:8080
             $data = json_decode(file_get_contents('php://input'), true);
-            $query = "INSERT INTO employees (birth_date, first_name, last_name, gender, hire_date) VALUES ('', $data[firstName]', '$data[lastName]', '$data[gender]', '');";
+            $query = "INSERT INTO employees (first_name, last_name, gender) VALUES ('$data[firstName]', '$data[lastName]', '$data[gender]');";
+            echo $query;
             $result = mysqli_query ($connessione, $query) or die ("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
             break;
             echo "Aggiunto con successo";
