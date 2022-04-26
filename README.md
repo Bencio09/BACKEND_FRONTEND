@@ -4,7 +4,7 @@ Per poter usare tutto sarà necessario [Docker](https://docs.docker.com/get-dock
 
 * Avviare il container di MySQL.
 ```bash
-docker run --name my_sql_server --rm -v <percorso cartella mysql_ata>:/var/lib/mysql -v <percorso cartella dump>:/dump -e MYSQL_ROOT_PASSWORD=<password> -p 3306:3306 -d mysql:latest
+docker run --name my_sql_server --rm -v <percorso cartella mysql_data>:/var/lib/mysql -v <percorso cartella dump>:/dump -e MYSQL_ROOT_PASSWORD=<password> -p 3306:3306 -d mysql:latest
 ```
 
 * Entrare nella bash del container MySQL.
