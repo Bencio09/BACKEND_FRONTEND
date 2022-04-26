@@ -1,3 +1,4 @@
+//INIZIO
 <?php
     session_start();
     include "./connessione.php";
