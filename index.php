@@ -4,6 +4,30 @@
     $b = 20;
     $a = $_GET["page"] * $b;
     
+
+    $page=@$_GET["page"] ?? 0;
+    $size=@$_GET["size"] ?? 20;
+    $id = @$_GET["id"] ?? 0;
+    $last = ceil($conta/$size) -1;
+
+    //array del json
+    $arrayJSON = array ();
+
+    $arrayJSON['_embedded'] = array(
+        "employees" => array(
+            
+        )
+    );
+
+
+    $arrayJSON['page']=array(
+        "size"=> $size,
+        "totalElements"=> $conta,
+        "totalPages"=> $last,
+        "number"=> $page
+
+    );
+
     
     if(!isset($_SESSION["person"])){
         $_SESSION["person"] = '{"firstName":"Johnny","lastName":"Smitty","gender":"M"}';
@@ -21,14 +45,18 @@
                 $query = "SELECT * FROM employees WHERE id = $_GET[id];";
                 $result = mysqli_query($connessione, $query) or die("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
                 while ($row = mysqli_fetch_assoc($result)) {
-                    echo $row["first_name"]. " " . $row["last_name"] . "<br>";
+                    $rows[] = $row;
                 } 
+                $arrayJSON["_embedded"]["employees"] = $rows;
+                echo json_encode($arrayJSON);
             }else{
                 $query = "SELECT * FROM employees LIMIT $a, $b";
                 $result = mysqli_query($connessione, $query) or die("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
                 while ($row = mysqli_fetch_assoc($result)) {
-                    echo $row["first_name"]. " " . $row["last_name"] . "<br>";
+                    $rows[] = $row;
                 }
+                $arrayJSON["_embedded"]["employees"] = $rows;
+                echo json_encode($arrayJSON);
             }
             
 
@@ -42,6 +70,7 @@
             $result = mysqli_query ($connessione, $query) or die ("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
             break;
             echo "Aggiunto con successo";
+
         case 'PUT':
             //PUT: curl -X PUT -H "Content-Type: application/json" -d "{\"id\":\"10003\",\"firstName\":\"John\",\"lastName\":\"Smith\",\"gender\":\"M\"}" localhost:8080
             $data = json_decode(file_get_contents('php://input'), true);
