@@ -1,12 +1,18 @@
 <?php
     session_start();
     include "./connessione.php";
-    $b = 20;
+    $b = 10;
     $a = $_GET["page"] * $b;
     
+    $query1 = "SELECT count(*) as tot FROM employees";
+    $result1 = mysqli_query($connessione, $query1) or die("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
+
+    $row = mysqli_fetch_assoc($result1);
+
+    $count = $row["tot"];
 
     $page=@$_GET["page"] ?? 0;
-    $size=@$_GET["size"] ?? 20;
+    $size=@$_GET["size"] ?? 10;
     $id = @$_GET["id"] ?? 0;
     $last = ceil($conta/$size) -1;
 
@@ -100,3 +106,4 @@
             header("HTTP/1.1 400 BAD REQUEST");
             break;
     }
+
