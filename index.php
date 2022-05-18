@@ -1,4 +1,3 @@
-//INIZIO
 <?php
     session_start();
     include "./connessione.php";
@@ -70,10 +69,7 @@
             $result = mysqli_query ($connessione, $query) or die ("Query fallita " . mysqli_error($connessione) . " " . mysqli_errno($connessione));
             echo json_encode($data);
             break;
-<<<<<<< HEAD
             echo "Aggiunto con successo";
-=======
->>>>>>> 08be2c1161759b9320b6ee966b59e9e04961256f
 
         case 'PUT':
             //PUT: curl -X PUT -H "Content-Type: application/json" -d "{\"id\":\"10003\",\"firstName\":\"John\",\"lastName\":\"Smith\",\"gender\":\"M\"}" localhost:8080
