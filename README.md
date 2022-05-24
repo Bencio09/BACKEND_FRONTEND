@@ -18,6 +18,10 @@ mysql -u root -p < /dump/create_employee.sql
 exit
 ```
 
+* Avviare il container del webserver.
+```bash
+docker run -d -p 8080:80 --name my-apache-php-app --rm  -v <percorso_per_la_cartella>:/var/www/html zener79/php:7.4-apache
+```
 
 * Comandi da utilizzare
 #### Mostra una lista di impiegati.
